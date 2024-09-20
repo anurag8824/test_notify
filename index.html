@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon Redirect with Notification</title>
+</head>
+<body>
+  <button onclick="redirectAndShowNotification()">Buy Product on Amazon</button>
+
+  <script>
+    const userDetails = {
+      name: "John Doe",
+      address: "123 Main St, Springfield",
+      pincode: "12345678"
+    };
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+        .then(() => {
+          alert('Data copied to clipboard!');
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      } else {
+        alert('Clipboard API not supported');
+      }
+    }
+
+    function showNotification(dataToCopy) {
+      if (!("Notification" in window)) {
+        alert('This browser does not support notifications.');
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        createNotification(dataToCopy);
+      } else if (Notification.permission === "default") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            createNotification(dataToCopy);
+          } else {
+            alert('Notification permission denied');
+          }
+        });
+      }
+    }
+
+    function createNotification(dataToCopy) {
+      const notification = new Notification("User Details", {
+        body: "Name: " + userDetails.name + ", Address: " + userDetails.address + ", Pincode: " + userDetails.pincode,
+        tag: "copy-notification"
+      });
+
+      notification.onclick = function() {
+        copyToClipboard(dataToCopy);
+      };
+    }
+
+    function redirectAndShowNotification() {
+      const dataToCopy = `Name: ${userDetails.name}, Address: ${userDetails.address}, Pincode: ${userDetails.pincode}`;
+      
+      // Open Amazon in a new tab
+      window.open("https://www.amazon.in", "_blank");
+
+      // Show notification with user's details
+      showNotification(dataToCopy);
+    }
+  </script>
+</body>
+</html>
