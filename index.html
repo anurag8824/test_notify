@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -75,4 +75,57 @@
     }
   </script>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Notification</title>
+</head>
+<body>
+  <button id="notifyButton">Send Notification</button>
+
+  <script>
+    // Function to show a notification
+    function showNotification() {
+      const notification = new Notification("Hello!", {
+        body: "This is a notification sent to all users!",
+        icon: "https://via.placeholder.com/48" // Optional: Add an icon
+      });
+
+      notification.onclick = function() {
+        // Action on clicking the notification
+        alert("Notification clicked!");
+      };
+    }
+
+    // Function to handle button click
+    async function handleButtonClick() {
+      // Check for Notification API support
+      if (!("Notification" in window)) {
+        alert('This browser does not support notifications.');
+        return;
+      }
+
+      // Request notification permission
+      if (Notification.permission === "granted") {
+        showNotification();
+      } else if (Notification.permission === "default") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          showNotification();
+        } else {
+          alert('Notification permission denied.');
+        }
+      }
+    }
+
+    // Attach event listener to the button
+    document.getElementById("notifyButton").addEventListener("click", handleButtonClick);
+  </script>
+</body>
 </html>
+
