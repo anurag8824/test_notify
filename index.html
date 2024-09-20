@@ -59,14 +59,19 @@
       };
     }
 
-    function redirectAndShowNotification() {
+    async function redirectAndShowNotification() {
       const dataToCopy = `Name: ${userDetails.name}, Address: ${userDetails.address}, Pincode: ${userDetails.pincode}`;
       
-      // Open Amazon in a new tab
-      window.open("https://www.amazon.in", "_blank");
-
-      // Show notification with user's details
-      showNotification(dataToCopy);
+      // Request notification permission first
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        showNotification(dataToCopy);
+        
+        // Open Amazon in a new tab after permission is granted
+        window.open("https://www.amazon.in", "_blank");
+      } else {
+        alert('Notification permission denied');
+      }
     }
   </script>
 </body>
